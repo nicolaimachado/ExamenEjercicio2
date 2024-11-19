@@ -40,67 +40,51 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ExamenEjercicio2Theme {
-                AplicacionColores()
+                Ejericio2()
             }
         }
     }
 }
 
 @Composable
-fun AplicacionColores() {
+fun Ejericio2() {
     var colorSeleccionado by remember { mutableStateOf(Color.White) }
 
-    PantallaSeleccionColor(
-        colorSeleccionado,
-        onColorSeleccionado = { color -> colorSeleccionado = color }
-    )
-}
-
-@Composable
-fun PantallaSeleccionColor(colorSeleccionado: Color, onColorSeleccionado: (Color) -> Unit) {
     Column (
         modifier = Modifier.padding(top = 100.dp)
     ) {
         Row {
             Text("Selecciona un color:")
-            ListaColores(onColorSeleccionado)
+            ListaColores(onColorSeleccionado = { color -> colorSeleccionado = color })
         }
         Column {
             Text("Color seleccionado:")
             Spacer(Modifier.width(8.dp))
-            ColorSeleccionado(colorSeleccionado)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .size(100.dp)
+                    .background(colorSeleccionado)
+            )
         }
     }
+
 }
 
 @Composable
 fun ListaColores(onColorSeleccionado: (Color) -> Unit) {
-    val colors = listOf(Color.Red, Color.Green, Color.Blue, Color.Yellow)
+    val colores = listOf(Color.Red, Color.Green, Color.Blue, Color.Yellow)
 
     LazyColumn () {
-        items(colors) { color ->
-            ColorItem(color, onColorSeleccionado)
+        items(colores) { color ->
+            Button(
+                onClick = { onColorSeleccionado(color) },
+                colors = ButtonDefaults.buttonColors(containerColor = color)
+            ) {
+                Text(if (color == Color.Red) {"Rojo"} else if (color == Color.Green) {"Verde"} else if (color == Color.Blue) {"Azul"} else {"Amarillo"}, color = Color.White)
+            }
         }
     }
 }
 
-@Composable
-fun ColorItem(color: Color, onColorSeleccionado: (Color) -> Unit) {
-    Button(
-        onClick = { onColorSeleccionado(color) },
-        colors = ButtonDefaults.buttonColors(containerColor = color)
-    ) {
-        Text(if (color == Color.Red) {"Rojo"} else if (color == Color.Green) {"Verde"} else if (color == Color.Blue) {"Azul"} else {"Amarillo"}, color = Color.White)
-    }
-}
-
-@Composable
-fun ColorSeleccionado(color: Color) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .size(100.dp)
-            .background(color)
-    )
-}
 
